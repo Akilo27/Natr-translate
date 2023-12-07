@@ -1,0 +1,28 @@
+  {% extends 'base.html' %}
+
+  {% block title %}переводчик{% endblock %}
+
+ {% block content %}
+
+
+  <form method="post" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-floating">
+                <input type="text" class="form-control form-control-lg input-field" id="text" name="text" placeholder="text">
+                <label for="text">Текст</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="output-block">
+                <p>Перевод:</p>
+                {{ text }}
+            </div>
+        </div>
+    </div>
+    <button type="submit">Сохранить</button>
+</form>
+
+
+{% endblock %}

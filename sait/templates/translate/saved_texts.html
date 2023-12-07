@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+  {% block title %}История{% endblock %}
+
+ {% block content %}
+
+{% if request.user.is_authenticated %}
+    <h3>Последний ваши переводы:</h3>
+    {% for t in texts %}
+        <p>{{t.text }} - {{ t.result }}</p>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

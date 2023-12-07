@@ -1,0 +1,52 @@
+from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+
+
+def main(request):
+    return render(request, 'relog/main.html')
+
+
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            # Проверяет, существует ли уже пользователь с указанным именем пользователя
+            if User.objects.filter(username=username).exists():
+                return redirect(
+                    'register')  # Перенаправляет обратно на страницу регистрации, если введено имя пользователя
+            else:
+                User.objects.create_user(username=username, password=password)
+                return redirect('login')  # Перенаправляет на страницу входа в систему после успешной регистрации
+
+    return render(request, 'relog/register.html')
+
+
+
+def login(request):
+    message = 'Добро пожаловать! Введите ваши данные.'
+    if request.method == "POST":
+
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        # Аутентифицирует пользователя с помощью заданного имени пользователя и пароля
+        if user is not None:
+            auth_login(request, user)
+
+            # Logs in the user if authentication is successful
+            return redirect('translate')
+        else:
+            message = "Нет такого пользователя, просмотрите правильность написания имени и пароля"
+            # При сбое аутентификации отображается сообщение об ошибке
+    return render(request, 'relog/login.html', {'message': message})
+
+
+# Это представление обрабатывает процесс выхода из системы
+def logout_view(request):
+    logout(request)  # Пользователь выходит из системы, очистив свой сеанс
+    return redirect('/')
